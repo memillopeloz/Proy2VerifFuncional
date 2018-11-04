@@ -25,7 +25,7 @@ class driver;
 		@ (negedge intf.sys_clk);
 		$display("Write Address: %x, Burst Size: %d", trans.address, trans.bl);
 
-		for(i=0; i < trans.bl; i++)
+		for(int i=0; i < trans.bl; i++)
 		begin
 			intf.wb_stb_i        = 1;
 			intf.wb_cyc_i        = 1;
@@ -39,7 +39,7 @@ class driver;
 				@ (posedge intf.sys_clk);
 			end while(intf.wb_ack_o == 1'b0);
 
-			@ (negedge sys_clk);
+			@ (negedge intf.sys_clk);
 			$display("Status: Burst-No: %d  WriteAddress: %x  WriteData: %x ", i, intf.wb_addr_i, intf.wb_dat_i);
 		end
 		intf.wb_stb_i        = 0;

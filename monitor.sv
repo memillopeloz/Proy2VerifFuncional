@@ -9,6 +9,8 @@ class monitor;
 	endfunction
 
 	task check();
+		logic exp_addr;
+		logic exp_data;
 		forever
 		@ (negedge intf.sys_clk)
 		exp_data        = sb.dfifo.pop_front(); // Expected Read Data

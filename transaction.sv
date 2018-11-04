@@ -1,5 +1,5 @@
 class transaction;
 	logic bl;
-	logic address;
+	logic [32:0] address;
 	logic value;
 endclass
