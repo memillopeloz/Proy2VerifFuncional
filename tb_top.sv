@@ -1,6 +1,7 @@
 `timescale 1ns/1ps
 
 `include "sdrc_intf.sv"
+`include "test_1.sv"
 
 module tb_top();
 
@@ -127,6 +128,8 @@ initial begin
   	$display(" Case-1: Single Write/Read Case        ");
   	$display("-------------------------------------- ");
 end
+
+test_1 t1(SdrcIntf);
 
 endmodule
 
