@@ -26,7 +26,7 @@ class driver;
 	endtask
 	
 	task drive(input transaction trans);
-		sb.afifo.push_back(trans.address);
+		
 		sb.bfifo.push_back(trans.bl);
 		
 		@ (negedge intf.sys_clk);
@@ -34,12 +34,15 @@ class driver;
 		
 		for(int i=0; i < trans.bl; i++)
 		begin
+			
 			intf.wb_stb_i        = 1;
 			intf.wb_cyc_i        = 1;
 			intf.wb_we_i         = 1;
 			intf.wb_sel_i        = 4'b1111;
-			intf.wb_addr_i       = trans.address[31:2]+i;// ESTA PICHA QUE?, ojo que el write address se modifica con el valor del loop, ojo en el monitor
-			intf.wb_dat_i        = trans.value;
+			intf.wb_addr_i       = trans.address+i;
+			intf.wb_dat_i        = $random & 32'hFFFFFFFF;
+			
+			sb.afifo.push_back(intf.wb_addr_i);
 			sb.dfifo.push_back(intf.wb_dat_i); // send written value to scoreboard
 
 			do begin

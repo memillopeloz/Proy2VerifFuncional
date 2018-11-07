@@ -4,12 +4,10 @@
 class transaction;
 	int address;
 	int bl;
-	int value;
 	
-	function new(int address, int bl, int value);
+	function new(int address, int bl);
 		this.address = address;
 		this.bl = bl;
-		this.value = value;
 	endfunction
 endclass
 
