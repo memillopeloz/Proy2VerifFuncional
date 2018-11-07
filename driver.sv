@@ -1,23 +1,31 @@
-// Hola Guille :3
+`ifndef DRIVER_SV
+`define DRIVER_SV
+
+`include "transaction.sv"
+`include "sdrc_intf.sv"
+`include "scoreboard.sv"
+
 class driver;
 	scoreboard sb;
-	virtual intf_cnt intf;
-
-	function new(virtual intf_cnt intf,scoreboard sb);
+	virtual sdrc_intf intf;
+	
+	function new(virtual sdrc_intf intf,scoreboard sb);
 		this.intf = intf;
 		this.sb = sb;
 	endfunction
-
+	
 	task reset();  // Reset method
-		intf.data = 0;
-		@ (negedge intf.clk);
-			intf.reset = 1;
-		@ (negedge intf.clk);
-			intf.reset = 0;
-		@ (negedge intf.clk);
-			intf.reset = 1;
+		intf.wb_rst_i = 1'h1;
+		#100
+		intf.wb_rst_i = 1'h0;
+		#10000;
+		intf.wb_rst_i = 1'h1;
+		#1000;
+		wait(intf.sdr_init_done == 1);
+		#1000;
 	endtask
-
+	
+	/*
 	task drive;
 	transaction trans;
 		sb.afifo.push_back(trans.address);
@@ -50,5 +58,7 @@ class driver;
 		intf.wb_addr_i       = 'hx;
 		intf.wb_dat_i        = 'hx;
 	endtask
+	*/
 endclass
 
+`endif

@@ -1,8 +1,6 @@
 `ifndef SDRC_IF_SV
 `define SDRC_IF_SV
 
-`include "sdrc_define.v"
-
 interface sdrc_if #(
     parameter APP_AW=26,    // Application Address Width
     parameter SDR_DW=32,    // SDR Data Width 
