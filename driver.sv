@@ -15,6 +15,13 @@ class driver;
 	endfunction
 	
 	task reset();  // Reset method
+		intf.wb_addr_i 	= 0;
+		intf.wb_dat_i 	= 0;
+		intf.wb_sel_i 	= 4'h0;
+		intf.wb_we_i 	= 0;
+		intf.wb_stb_i 	= 0;
+		intf.wb_cyc_i 	= 0;
+
 		intf.wb_rst_i = 1'h1;
 		#100
 		intf.wb_rst_i = 1'h0;

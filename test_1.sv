@@ -14,6 +14,7 @@ program test_1(sdrc_if intf);
 		$display("-------------------------------------- ");
 		env.drv.reset();
 		env.drv.drive(trans);
+		#1000;
 		env.mon.check();
 	end
 endprogram
