@@ -25,15 +25,13 @@ class driver;
 		#1000;
 	endtask
 	
-	/*
-	task drive;
-	transaction trans;
+	task drive(input transaction trans);
 		sb.afifo.push_back(trans.address);
 		sb.bfifo.push_back(trans.bl);
-
+		
 		@ (negedge intf.sys_clk);
 		$display("Write Address: %x, Burst Size: %d", trans.address, trans.bl);
-
+		
 		for(int i=0; i < trans.bl; i++)
 		begin
 			intf.wb_stb_i        = 1;
@@ -58,7 +56,7 @@ class driver;
 		intf.wb_addr_i       = 'hx;
 		intf.wb_dat_i        = 'hx;
 	endtask
-	*/
+	
 endclass
 
 `endif
