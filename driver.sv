@@ -7,9 +7,9 @@
 
 class driver;
 	scoreboard sb;
-	virtual sdrc_intf intf;
+	virtual sdrc_if intf;
 	
-	function new(virtual sdrc_intf intf,scoreboard sb);
+	function new(virtual sdrc_if intf,scoreboard sb);
 		this.intf = intf;
 		this.sb = sb;
 	endfunction

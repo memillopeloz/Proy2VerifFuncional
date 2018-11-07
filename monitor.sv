@@ -6,10 +6,10 @@
 
 class monitor;
 	scoreboard sb;
-	virtual sdrc_intf intf;
+	virtual sdrc_if intf;
 	reg [31:0]   exp_data;
 	
-	function new(virtual sdrc_intf intf, scoreboard sb);
+	function new(virtual sdrc_if intf, scoreboard sb);
 		this.intf = intf;
 		this.sb = sb;
 	endfunction

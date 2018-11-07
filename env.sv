@@ -10,9 +10,9 @@ class environment;
 	driver drv;
 	scoreboard sb;
 	monitor mon;
-	virtual sdrc_intf intf;
+	virtual sdrc_if intf;
 	
-	function new(virtual sdrc_intf intf);
+	function new(virtual sdrc_if intf);
 		this.intf = intf;
 		sb = new();
 		drv = new(intf, sb);
