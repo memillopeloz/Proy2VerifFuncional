@@ -6,7 +6,7 @@
 
 program test_1(sdrc_if intf);
 	environment env = new(intf);
-	transaction trans(32'h4_0000,8'h4, 5);
+	transaction trans = new(32'h4_0000,8'h4, 5);
 	
 	initial begin
 		$display("-------------------------------------- ");
