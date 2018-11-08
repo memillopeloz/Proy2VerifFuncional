@@ -1,10 +1,9 @@
-`ifndef TEST_1_SV
-`define TEST_1_SV
+`ifndef TEST_SV
+`define TEST_SV
 
 `include "env.sv"
-`include "transaction.sv"
 
-program test_1(sdrc_if intf);
+program test(sdrc_if intf);
 	environment env = new(intf);
 	
 	initial begin

@@ -1,7 +1,7 @@
 `timescale 1ns/1ps
 
 `include "sdrc_intf.sv"
-`include "test_1.sv"
+`include "test.sv"
 
 module tb_top();
 
@@ -129,7 +129,7 @@ initial begin
   	$display("-------------------------------------- ");
 end
 
-test_1 t1(SdrcIntf);
+test t1(SdrcIntf);
 
 endmodule
 
