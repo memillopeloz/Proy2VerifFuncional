@@ -45,7 +45,7 @@ class driver;
 			intf.wb_cyc_i        = 1;
 			intf.wb_we_i         = 1;
 			intf.wb_sel_i        = 4'b1111;
-			intf.wb_addr_i       = address+i;
+			intf.wb_addr_i       = address[31:2]+i;
 			intf.wb_dat_i        = $random & 32'hFFFFFFFF;
 			
 			sb.afifo.push_back(intf.wb_addr_i);

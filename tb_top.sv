@@ -5,6 +5,8 @@
 
 module tb_top();
 
+`define SDR_16BIT
+
 // Clocks
 parameter P_SYS = 10;     //    200MHz
 parameter P_SDR = 20;     //    100MHz
