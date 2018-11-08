@@ -1,7 +1,6 @@
 `ifndef DRIVER_SV
 `define DRIVER_SV
 
-`include "transaction.sv"
 `include "sdrc_intf.sv"
 `include "scoreboard.sv"
 
@@ -32,21 +31,21 @@ class driver;
 		#1000;
 	endtask
 	
-	task drive(input transaction trans);
+	task Burst_write(input int unsigned address, input int unsigned bl);
 		
-		sb.bfifo.push_back(trans.bl);
+		sb.bfifo.push_back(bl);
 		
 		@ (negedge intf.sys_clk);
-		$display("Write Address: %x, Burst Size: %d", trans.address, trans.bl);
+		$display("Write Address: %x, Burst Size: %d", address, bl);
 		
-		for(int i=0; i < trans.bl; i++)
+		for(int i=0; i < bl; i++)
 		begin
 			
 			intf.wb_stb_i        = 1;
 			intf.wb_cyc_i        = 1;
 			intf.wb_we_i         = 1;
 			intf.wb_sel_i        = 4'b1111;
-			intf.wb_addr_i       = trans.address+i;
+			intf.wb_addr_i       = address+i;
 			intf.wb_dat_i        = $random & 32'hFFFFFFFF;
 			
 			sb.afifo.push_back(intf.wb_addr_i);

@@ -13,7 +13,7 @@ class monitor;
 		this.sb = sb;
 	endfunction
 	
-	task check();
+	task Burst_read();
 		int unsigned exp_addr;
 		int unsigned exp_data;
 		int j;

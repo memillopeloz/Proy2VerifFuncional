@@ -6,24 +6,51 @@
 
 program test_1(sdrc_if intf);
 	environment env = new(intf);
-	transaction trans = new(32'h0004_0000,8'h4);
 	
 	initial begin
-		$display("-------------------------------------- ");
-		$display(" Case-1: Single Write/Read Case        ");
-		$display("-------------------------------------- ");
 		env.drv.reset();
-		env.drv.drive(trans);
-		#1000;
-		env.mon.check();
+		test_case_1();
+        test_case_2();
+    end
+    
+    task test_case_1();
+        // Before start each test reset error_count and loop_count
+        env.sb.error_count = 0;
+        env.sb.loop_count = 0;
         
+        $display("-------------------------------------- ");
+		$display(" Test-1: Single Write/Read Case        ");
+		$display("-------------------------------------- ");
+        env.drv.Burst_write(32'h0004_0000,8'h4);
+		#1000;
+		env.mon.Burst_read();
         $display("###############################");
         if(env.sb.error_count == 0 && env.sb.loop_count != 0)
-            $display("STATUS: Case-1: Single Write/Read Case TEST PASSED");
+            $display("STATUS: Test-1: Single Write/Read PASSED");
         else
-            $display("ERROR:  Case-1: Single Write/Read Case TEST FAILED");
+            $display("ERROR:  Test-1: Single Write/Read FAILED");
             $display("###############################");
-    end
+    endtask
+    
+    task test_case_2();
+        // Before start each test reset error_count and loop_count
+        env.sb.error_count = 0;
+        env.sb.loop_count = 0;
+        
+        $display("-------------------------------------- ");
+		$display(" Test-2: Two Write/Read Case           ");
+		$display("-------------------------------------- ");
+        env.drv.Burst_write(32'h0004_0000,8'h4);
+        env.mon.Burst_read();
+        env.drv.Burst_write(32'h0040_0000,8'h5);
+        env.mon.Burst_read();
+        $display("###############################");
+        if(env.sb.error_count == 0 && env.sb.loop_count != 0)
+            $display("STATUS: Test-2: Two Write/Read PASSED");
+        else
+            $display("ERROR:  Test-2: Two Write/Read FAILED");
+            $display("###############################");
+    endtask
 endprogram
 
 `endif
