@@ -125,7 +125,7 @@ wire #(2.0) sdram_clk_d   = sdram_clk;
 
 initial begin
 	$display("-------------------------------------- ");
-  	$display(" Case-1: Single Write/Read Case        ");
+  	$display("          Simulation: Started          ");
   	$display("-------------------------------------- ");
 end
 

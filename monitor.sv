@@ -14,13 +14,13 @@ class monitor;
 	endfunction
 	
 	task check();
-		int exp_addr;
-		int exp_data;
+		int unsigned exp_addr;
+		int unsigned exp_data;
 		int j;
 		reg [7:0]  bl;
 		bl = sb.bfifo.pop_front(); 
 		@ (negedge intf.sys_clk);
-
+        
 		for(j=0; j < bl; j++)
 		begin
 			exp_addr	= sb.afifo.pop_front();
@@ -33,12 +33,14 @@ class monitor;
 			do begin
 			 @ (posedge intf.sys_clk);
 			end while(intf.wb_ack_o == 1'b0);
-			if(exp_data != intf.wb_dat_o && exp_addr != intf.wb_addr_i) begin // Compare expected value from scoreboard and compare with DUT output, addresses as well
-				$display(" * ERROR * Read [ value/addr ] -> [ %b,%b ] ::: SB [ value/addr ] -> [ %b,%b ] ", intf.wb_addr_i, intf.wb_dat_o, exp_data, exp_addr );
+			if(exp_data != intf.wb_dat_o || exp_addr != intf.wb_addr_i) begin // Compare expected value from scoreboard and compare with DUT output, addresses as well
+				$display(" * ERROR * Read [ value/addr ] -> [ %x,%x ] ::: SB [ value/addr ] -> [ %x,%x ] ", intf.wb_dat_o, intf.wb_addr_i, exp_data, exp_addr );
+                this.sb.error_count += 1;
 			end 
 			else begin
-				$display(" *SUCCESS* Read [ value/addr ] -> [ %b,%b ] ::: SB [ value/addr ] -> [ %b,%b ] ", intf.wb_addr_i, intf.wb_dat_o, exp_data, exp_addr );
+				$display(" *SUCCESS* Read [ value/addr ] -> [ %x,%x ] ::: SB [ value/addr ] -> [ %x,%x ] ", intf.wb_dat_o, intf.wb_addr_i, exp_data, exp_addr );
 			end
+            this.sb.loop_count += 1;
 			@ (negedge intf.sdram_clk);
 		end
 		intf.wb_stb_i        = 0;

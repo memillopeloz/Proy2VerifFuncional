@@ -6,7 +6,7 @@
 
 program test_1(sdrc_if intf);
 	environment env = new(intf);
-	transaction trans = new(0,4);
+	transaction trans = new(32'h0004_0000,8'h4);
 	
 	initial begin
 		$display("-------------------------------------- ");
@@ -16,7 +16,14 @@ program test_1(sdrc_if intf);
 		env.drv.drive(trans);
 		#1000;
 		env.mon.check();
-	end
+        
+        $display("###############################");
+        if(env.sb.error_count == 0 && env.sb.loop_count != 0)
+            $display("STATUS: Case-1: Single Write/Read Case TEST PASSED");
+        else
+            $display("ERROR:  Case-1: Single Write/Read Case TEST FAILED");
+            $display("###############################");
+    end
 endprogram
 
 `endif
