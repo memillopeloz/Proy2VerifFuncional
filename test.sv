@@ -11,6 +11,7 @@ program test(sdrc_if intf);
 		test_case_1();
         test_case_2();
         test_case_4();
+        test_case_6();
     end
     
     task test_case_1();
@@ -81,6 +82,38 @@ program test(sdrc_if intf);
             $display("ERROR:  Test-4: Four Write/Read FAILED");
         $display("###############################");
     endtask
+    
+    task test_case_6();
+        // Before start each test reset error_count and loop_count
+        env.sb.error_count = 0;
+        env.sb.loop_count = 0;
+        
+        $display("-------------------------------------- ");
+		$display(" Test-6: Random 2 write/read           ");
+		$display("-------------------------------------- ");
+        
+        for(int k=0, int unsigned start_addr = 0; k < 20; k++) begin
+            start_addr = $random & 32'h003FFFFF;
+            env.drv.Burst_write(start_addr,($random & 8'h0f)+1);  
+            #100;
+            
+            start_addr = $random & 32'h003FFFFF;
+            env.drv.Burst_write(start_addr,($random & 8'h0f)+1);  
+            #100;
+            env.mon.Burst_read();   
+            #100;
+            env.mon.Burst_read();
+            #100;
+        end
+        
+        $display("###############################");
+        if(env.sb.error_count == 0 && env.sb.loop_count != 0)
+            $display("STATUS: Test-6: Random 2 write/read PASSED");
+        else
+            $display("ERROR:  Test-6: Random 2 write/read FAILED");
+        $display("###############################");
+    endtask
+    
 endprogram
 
 `endif
