@@ -9,11 +9,12 @@ program test(sdrc_if intf);
 	initial begin
 		env.drv.reset();
 		test_case_1();
-        test_case_2();
-        test_case_4();
-        test_case_5();
-        test_case_6();
-    end
+       	 	test_case_2();
+		test_case_3();
+        	test_case_4();
+        	test_case_5();
+        	test_case_6();
+    	end
     
     task test_case_1();
         // Before start each test reset error_count and loop_count
@@ -54,6 +55,72 @@ program test(sdrc_if intf);
             $display("STATUS: Test-2: Two Write/Read PASSED");
         else
             $display("ERROR:  Test-2: Two Write/Read FAILED");
+        $display("###############################");
+    endtask
+    
+    task test_case_3();
+        // Before start each test reset error_count and loop_count
+        env.sb.error_count = 0;
+        env.sb.loop_count = 0;
+        
+        $display("-------------------------------------- ");
+	$display(" Test-3: Create a Page Cross Over      ");
+	$display("-------------------------------------- ");
+        
+	env.drv.Burst_write(32'h0000_0FF0,8'h8);  
+	env.drv.Burst_write(32'h0001_0FF4,8'hF);  
+	env.drv.Burst_write(32'h0002_0FF8,8'hF);  
+	env.drv.Burst_write(32'h0003_0FFC,8'hF);  
+	env.drv.Burst_write(32'h0004_0FE0,8'hF);  
+	env.drv.Burst_write(32'h0005_0FE4,8'hF);  
+	env.drv.Burst_write(32'h0006_0FE8,8'hF);  
+	env.drv.Burst_write(32'h0007_0FEC,8'hF);  
+	env.drv.Burst_write(32'h0008_0FD0,8'hF);  
+	env.drv.Burst_write(32'h0009_0FD4,8'hF);  
+	env.drv.Burst_write(32'h000A_0FD8,8'hF);  
+	env.drv.Burst_write(32'h000B_0FDC,8'hF);  
+	env.drv.Burst_write(32'h000C_0FC0,8'hF);  
+	env.drv.Burst_write(32'h000D_0FC4,8'hF);  
+	env.drv.Burst_write(32'h000E_0FC8,8'hF);  
+	env.drv.Burst_write(32'h000F_0FCC,8'hF);  
+	env.drv.Burst_write(32'h0010_0FB0,8'hF);  
+	env.drv.Burst_write(32'h0011_0FB4,8'hF);  
+	env.drv.Burst_write(32'h0012_0FB8,8'hF);  
+	env.drv.Burst_write(32'h0013_0FBC,8'hF);  
+	env.drv.Burst_write(32'h0014_0FA0,8'hF);  
+	env.drv.Burst_write(32'h0015_0FA4,8'hF);  
+	env.drv.Burst_write(32'h0016_0FA8,8'hF);  
+	env.drv.Burst_write(32'h0017_0FAC,8'hF);  
+	env.mon.Burst_read();  
+	env.mon.Burst_read();  
+	env.mon.Burst_read();  
+	env.mon.Burst_read();  
+	env.mon.Burst_read();  
+	env.mon.Burst_read();  
+	env.mon.Burst_read();  
+	env.mon.Burst_read();  
+	env.mon.Burst_read();  
+	env.mon.Burst_read();  
+	env.mon.Burst_read();  
+	env.mon.Burst_read();  
+	env.mon.Burst_read();  
+	env.mon.Burst_read();  
+	env.mon.Burst_read();  
+	env.mon.Burst_read();  
+	env.mon.Burst_read();  
+	env.mon.Burst_read();  
+	env.mon.Burst_read();  
+	env.mon.Burst_read();  
+	env.mon.Burst_read();  
+	env.mon.Burst_read();  
+	env.mon.Burst_read();  
+	env.mon.Burst_read();
+        
+        $display("###############################");
+        if(env.sb.error_count == 0 && env.sb.loop_count != 0)
+            $display("STATUS: Test-3: Create a Page Cross Over PASSED");
+        else
+            $display("ERROR:  Test-3: Create a Page Cross Over FAILED");
         $display("###############################");
     endtask
 
