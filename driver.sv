@@ -3,14 +3,17 @@
 
 `include "sdrc_intf.sv"
 `include "scoreboard.sv"
+`include "stimulusAllRand.sv"
 
 class driver;
 	scoreboard sb;
+	stimulusAllRand sti;
 	virtual sdrc_if intf;
 	
 	function new(virtual sdrc_if intf,scoreboard sb);
 		this.intf = intf;
 		this.sb = sb;
+		sti = new();
 	endfunction
 	
 	task reset();  // Reset method
@@ -32,7 +35,10 @@ class driver;
 	endtask
 	
 	task Burst_write(input int unsigned address, input int unsigned bl);
+		if(sti.randomize() != 1)
+			$display("failed randomize()");
 		
+		address = {sti.row, sti.bank, sti.col};
 		sb.bfifo.push_back(bl);
 		
 		@ (negedge intf.sys_clk);
