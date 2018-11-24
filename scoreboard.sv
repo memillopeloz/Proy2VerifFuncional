@@ -2,7 +2,7 @@
 `define SCOREBOARD_SV
 
 class scoreboard;
-	int unsigned dfifo[$]; // data fifo
+	int unsigned dfifo[int]; // data fifo, indexed by address
 	int unsigned afifo[$]; // address  fifo
 	int unsigned bfifo[$]; // Burst Length fifo
     

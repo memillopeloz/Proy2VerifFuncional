@@ -55,7 +55,8 @@ class driver;
 			intf.wb_dat_i        = $random & 32'hFFFFFFFF;
 			
 			sb.afifo.push_back(intf.wb_addr_i);
-			sb.dfifo.push_back(intf.wb_dat_i); // send written value to scoreboard
+			//sb.dfifo.push_back(intf.wb_dat_i); // send written value to scoreboard
+            sb.dfifo[intf.wb_addr_i] = intf.wb_dat_i;
 
 			do begin
 				@ (posedge intf.sys_clk);

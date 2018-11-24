@@ -24,8 +24,14 @@ class monitor;
 		for(j=0; j < bl; j++)
 		begin
 			exp_addr	= sb.afifo.pop_front();
-			exp_data	= sb.dfifo.pop_front(); // Expected Read Data
-			
+			//exp_data	= sb.dfifo.pop_front(); // Expected Read Data
+            if(sb.dfifo.exists(exp_addr)) begin
+                exp_data    = sb.dfifo[exp_addr];
+            end
+            else begin
+                $display(" * ERROR * Expected address not indexed in SB. addr -> %x", exp_addr );
+                this.sb.error_count += 1;
+			end
 			intf.wb_stb_i        = 1;
 			intf.wb_cyc_i        = 1;
 			intf.wb_we_i         = 0;
