@@ -7,7 +7,7 @@
 
 class driver;
 	scoreboard sb;
-	stimulusAllRand sti;
+	stimulus sti;
 	virtual sdrc_if intf;
 	
 	function new(virtual sdrc_if intf,scoreboard sb);
@@ -15,6 +15,10 @@ class driver;
 		this.sb = sb;
 		sti = new();
 	endfunction
+
+    function setStimulus(stimulus st);
+        this.sti = st;
+    endfunction
 	
 	task reset();  // Reset method
 		intf.wb_addr_i 	= 0;
@@ -35,8 +39,9 @@ class driver;
 	endtask
 	
 	task Burst_write(input int unsigned address, input int unsigned bl);
-		if(sti.randomize() != 1)
+		if(sti.randomize() != 1) begin
 			$display("failed randomize()");
+        end
 		
 		address = {sti.row, sti.bank, sti.col};
 		sb.bfifo.push_back(bl);

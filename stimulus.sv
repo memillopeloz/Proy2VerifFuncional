@@ -1,23 +1,12 @@
-`ifndef STIMULUS_ALLRAND_SV
-`define STIMULUS_ALLRAND_SV
+`ifndef STIMULUS_SV
+`define STIMULUS_SV
 
-`include "stimulus.sv"
+class stimulus;
+    int burst_length;
 
-class stimulusAllRand extends stimulus;
     rand  logic[11:0] row;
     rand  logic[1:0]  bank;
     rand  logic[11:0] col;
-
-	function new();
-		this.burst_length = 1;
-	endfunction
-
-    constraint memoryrange {
-        //bank dist { 0 := 1 , 1 := 1 };
-        bank >= 0; bank < 5;
-        row >= 0; row < 12;
-        col >= 0; col < 8;
-    };
 
     // memory layout
     // sdram controller supports the following amount of rows, banks, and columns:
@@ -25,7 +14,6 @@ class stimulusAllRand extends stimulus;
     //                              2M*32 Config ->       11     4           8
     
     // Row Address[11:0] Bank Address[1:0] Column Address[11:0]
-    //  function getStimulus(int row, int bank, int col;
 
 endclass
 

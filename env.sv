@@ -10,6 +10,7 @@ class environment;
 	driver drv;
 	scoreboard sb;
 	monitor mon;
+    stimulusAllRand stAllRand;
 	virtual sdrc_if intf;
 	
 	function new(virtual sdrc_if intf);
@@ -17,6 +18,7 @@ class environment;
 		sb = new();
 		drv = new(intf, sb);
 		mon = new(intf, sb);
+        stAllRand = new();
 	endfunction
 	
 endclass

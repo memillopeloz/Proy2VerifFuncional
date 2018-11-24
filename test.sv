@@ -8,13 +8,14 @@ program test(sdrc_if intf);
 	
 	initial begin
 		env.drv.reset();
+        env.drv.setStimulus(stim);
 		test_case_1();
-       	 	test_case_2();
+        test_case_2();
 		test_case_3();
-        	test_case_4();
-        	test_case_5();
-        	test_case_6();
-    	end
+        test_case_4();
+        test_case_5();
+        test_case_6();
+    end
     
     task test_case_1();
         // Before start each test reset error_count and loop_count
@@ -229,8 +230,8 @@ program test(sdrc_if intf);
         
         $display("-------------------------------------- ");
 		$display(" Test-6: Random 2 write/read           ");
-		$display("-------------------------------------- ");
-        
+		$display("-------------------------------------- ");   
+
         for(int k=0, int unsigned start_addr = 0; k < 20; k++) begin
             start_addr = $random & 32'h003FFFFF;
             env.drv.Burst_write(start_addr,($random & 8'h0f)+1);  
