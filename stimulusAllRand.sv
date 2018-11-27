@@ -8,9 +8,15 @@ class stimulusAllRand extends stimulus;
     rand  bit[1:0]  bank[$];
     rand  bit[11:0] col[$];
 
+    rand int burst_length;
+
 	function new();
 		this.burst_length = 1;
 	endfunction
+
+    constraint burst {
+        this.burst_length inside {[0:15]};
+    }
 
     constraint arrayBounds {
         bank.size == this.burst_length;
@@ -32,6 +38,9 @@ class stimulusAllRand extends stimulus;
     endfunction
     function integer getBank(idx);
         return this.bank[idx];
+    endfunction
+    function integer getBurstLength();
+        return this.burst_length;
     endfunction
 
     //returns first address, without modifying queues

@@ -41,10 +41,11 @@ class driver;
         for(int i = 0; i < 20; i++)
         begin
             assert(sti.randomize());
+            sti.burst_length = i + 1;
             $display("---------------------------------------------");
             $display("row: %d, col: %d, bank: %d", sti.getRow(0), sti.getCol(0), sti.getBank(0));
             //$display("row: %d, col: %d, bank: %d", sti.row, sti.col, sti.bank);
-            $display("Randomized val: 0x%x", sti.getAddress());
+            $display("Randomized val: 0x%x, burst: %d", sti.getAddress(), sti.getBurstLength());
             $display("---------------------------------------------");
         end
     endtask
@@ -55,16 +56,17 @@ class driver;
         end
         
         address = sti.getAddress();
-        //sb.bfifo.push_back(bl);
-        sb.bfifo.push_back(sti.burst_length);
+        bl = sti.getBurstLength();
+
+        sb.bfifo.push_back(bl);
         
         @ (negedge intf.sys_clk);
         $display("Base Write Address: %x, Burst Size: %d", address, bl);
         
-        //for(int i=0; i < bl; i++)
-        for(int i=0; i < sti.burst_length; i++)
+        for(int i=0; i < bl; i++)
+        //for(int i=0; i < sti.burst_length; i++)
         begin
-            address = sti.popAddress();            
+            address = sti.popAddress();   
 
             intf.wb_stb_i        = 1;
             intf.wb_cyc_i        = 1;

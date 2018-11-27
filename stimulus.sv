@@ -4,10 +4,6 @@
 virtual class stimulus;
     int burst_length;
 
-    //rand bit[11:0] row[$];
-    //rand bit[1:0]  bank[$];
-    //rand bit[11:0] col[$];
-
     //returns first address, without modifying queues
     pure virtual function integer getAddress();
     
@@ -18,6 +14,7 @@ virtual class stimulus;
     pure virtual function integer getRow(idx);
     pure virtual function integer getCol(idx);
     pure virtual function integer getBank(idx);
+    pure virtual function integer getBurstLength();
 
     // memory layout
     // sdram controller supports the following amount of rows, banks, and columns:
