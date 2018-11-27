@@ -5,16 +5,18 @@
 
 program test(sdrc_if intf);
 	environment env = new(intf);
+    
 	
 	initial begin
 		env.drv.reset();
-        env.drv.setStimulus(stim);
-		test_case_1();
-        test_case_2();
-		test_case_3();
-        test_case_4();
-        test_case_5();
-        test_case_6();
+        env.drv.setStimulus(env.stAllRand);
+		//test_case_1();
+        //test_case_2();
+		//test_case_3();
+        //test_case_4();
+        //test_case_5();
+        //test_case_6();
+        env.drv.testRandomize();
     end
     
     task test_case_1();
