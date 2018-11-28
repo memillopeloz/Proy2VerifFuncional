@@ -13,7 +13,7 @@ class monitor;
 		this.sb = sb;
 	endfunction
 	
-	task Burst_read();
+	task read();
 		int unsigned exp_addr;
 		int unsigned exp_data;
 		int j;
@@ -24,9 +24,8 @@ class monitor;
 		for(j=0; j < bl; j++)
 		begin
 			exp_addr	= sb.afifo.pop_front();
-			//exp_data	= sb.dfifo.pop_front(); // Expected Read Data
             if(sb.dfifo.exists(exp_addr)) begin
-                exp_data    = sb.dfifo[exp_addr];
+                exp_data    = sb.dfifo[exp_addr]; // Expected Read Data
             end
             else begin
                 $display(" * ERROR * Expected address not indexed in SB. addr -> %x", exp_addr );
@@ -39,7 +38,9 @@ class monitor;
 			do begin
 			 @ (posedge intf.sys_clk);
 			end while(intf.wb_ack_o == 1'b0);
-			if(exp_data != intf.wb_dat_o || exp_addr != intf.wb_addr_i) begin // Compare expected value from scoreboard and compare with DUT output, addresses as well
+            
+            // Compare expected value from scoreboard and compare with DUT output, addresses as well
+			if(exp_data != intf.wb_dat_o || exp_addr != intf.wb_addr_i) begin 
 				$display(" * ERROR * Read [ value/addr ] -> [ %x,%x ] ::: SB [ value/addr ] -> [ %x,%x ] ", intf.wb_dat_o, intf.wb_addr_i, exp_data, exp_addr );
                 this.sb.error_count += 1;
 			end 

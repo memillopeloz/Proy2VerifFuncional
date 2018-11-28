@@ -14,6 +14,15 @@ class scoreboard;
 		this.error_count = 0;
         this.loop_count = 0;
 	endfunction
+
+    function clear();
+        this.error_count = 0;
+        this.loop_count = 0;
+        this.dfifo.delete();
+        this.afifo = {};
+        this.bfifo = {};
+    endfunction
+    
 endclass
 
 `endif

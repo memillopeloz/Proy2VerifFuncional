@@ -1,18 +1,12 @@
-`ifndef STIMULUS_ALLRAND_SV
-`define STIMULUS_ALLRAND_SV
+`ifndef STIMULUS_RANDADDR_SV
+`define STIMULUS_RANDADDR_SV
 
-`include "stimulusRandAddr.sv"
+`include "stimulus.sv"
 
-class stimulusAllRand extends stimulusRandAddr;
+class stimulusRandAddr extends stimulus;
     rand  bit[11:0] row[$];
     rand  bit[1:0]  bank[$];
     rand  bit[11:0] col[$];
-
-    rand int burst_length;
-
-    constraint burst {
-        this.burst_length inside {[0:15]};
-    }
 
     constraint arrayBounds {
         bank.size == this.burst_length;

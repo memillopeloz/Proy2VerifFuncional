@@ -4,19 +4,19 @@
 `include "sdrc_intf.sv"
 `include "scoreboard.sv"
 `include "stimulusAllRand.sv"
+`include "stimulusRandAddr.sv"
 
 class driver;
     scoreboard sb;
-    stimulus sti;
+    stimulusAllRand stiAllRand;
+    stimulusRandAddr stiRandAddr;
     virtual sdrc_if intf;
     
     function new(virtual sdrc_if intf,scoreboard sb);
         this.intf = intf;
+        this.stiAllRand = new();
+        this.stiRandAddr = new();
         this.sb = sb;
-    endfunction
-
-    function setStimulus(stimulus st);
-        this.sti = st;
     endfunction
     
     task reset();  // Reset method
@@ -37,34 +37,9 @@ class driver;
         #1000;
     endtask
 
-    task testRandomize();
-        for(int i = 0; i < 20; i++)
-        begin
-            assert(sti.randomize());
-            sti.burst_length = i + 1;
-            $display("---------------------------------------------");
-            $display("row: %d, col: %d, bank: %d", sti.getRow(0), sti.getCol(0), sti.getBank(0));
-            //$display("row: %d, col: %d, bank: %d", sti.row, sti.col, sti.bank);
-            $display("Randomized val: 0x%x, burst: %d", sti.getAddress(), sti.getBurstLength());
-            $display("---------------------------------------------");
-        end
-    endtask
-    
-    task Burst_write(input int unsigned address, input int unsigned bl);
-        if(sti.randomize() != 1) begin
-            $display("failed randomize()");
-        end
-        
-        address = sti.getAddress();
-        bl = sti.getBurstLength();
-
-        sb.bfifo.push_back(bl);
-        
-        @ (negedge intf.sys_clk);
-        $display("Base Write Address: %x, Burst Size: %d", address, bl);
-        
+    task write_routine(input int unsigned bl, input stimulus sti);
+        int unsigned address;
         for(int i=0; i < bl; i++)
-        //for(int i=0; i < sti.burst_length; i++)
         begin
             address = sti.popAddress();   
 
@@ -72,12 +47,11 @@ class driver;
             intf.wb_cyc_i        = 1;
             intf.wb_we_i         = 1;
             intf.wb_sel_i        = 4'b1111;
-            intf.wb_addr_i       = address;//address[31:2]+i;
+            intf.wb_addr_i       = address;
             intf.wb_dat_i        = $random & 32'hFFFFFFFF;
             
             sb.afifo.push_back(intf.wb_addr_i);
-            //sb.dfifo.push_back(intf.wb_dat_i); // send written value to scoreboard
-            sb.dfifo[intf.wb_addr_i] = intf.wb_dat_i;
+            sb.dfifo[intf.wb_addr_i] = intf.wb_dat_i;// send written value to scoreboard
 
             do begin
                 @ (posedge intf.sys_clk);
@@ -92,6 +66,58 @@ class driver;
         intf.wb_sel_i        = 'hx;
         intf.wb_addr_i       = 'hx;
         intf.wb_dat_i        = 'hx;
+    endtask
+
+    task testRandomize();
+        stimulus sti = stiAllRand;
+        for(int i = 0; i < 20; i++)
+        begin
+            assert(sti.randomize());
+            sti.burst_length = i + 1;
+            $display("---------------------------------------------");
+            $display("row: %d, col: %d, bank: %d", sti.getRow(0), sti.getCol(0), sti.getBank(0));
+            //$display("row: %d, col: %d, bank: %d", sti.row, sti.col, sti.bank);
+            $display("Randomized val: 0x%x, burst: %d", sti.getAddress(), sti.getBurstLength());
+            $display("---------------------------------------------");
+        end
+    endtask
+
+    task Burst_write(input int unsigned a, input int unsigned b);
+    endtask
+
+    task single_write(input int unsigned bl = 1);
+        stimulus sti = stiRandAddr;
+        sti.burst_length = bl;
+
+        if(sti.randomize() != 1) begin
+            $display("failed randomize()");
+        end
+
+        sb.bfifo.push_back(bl);
+        
+        @ (negedge intf.sys_clk);
+        $display("Base Write Address: %x, Burst Size: %d", sti.getAddress(), bl);
+        
+        write_routine(bl, sti);
+    endtask
+    
+    task all_rand_write();
+        int unsigned address;
+        int unsigned bl;
+        stimulus sti = stiAllRand;
+
+        if(sti.randomize() != 1) begin
+            $display("failed randomize()");
+        end
+
+        bl = sti.getBurstLength();
+
+        sb.bfifo.push_back(bl);
+        
+        @ (negedge intf.sys_clk);
+        $display("Base Write Address: %x, Burst Size: %d", sti.getAddress(), bl);
+        
+        write_routine(bl, sti);
     endtask
     
 endclass

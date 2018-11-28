@@ -9,30 +9,27 @@ program test(sdrc_if intf);
     
     initial begin
         env.drv.reset();
-        env.drv.setStimulus(env.stAllRand);
 
-        //test_case_1();
-        //test_case_2();
+        test_case_1();
+        test_case_2();
         //test_case_3();
-        //test_case_4();
+        test_case_4();
         //test_case_5();
-
         test_case_6();
 
         //env.drv.testRandomize();
     end
     
     task test_case_1();
-        // Before start each test reset error_count and loop_count
-        env.sb.error_count = 0;
-        env.sb.loop_count = 0;
+        // Before start each test reset scoreboard
+        env.sb.clear();
         
         $display("-------------------------------------- ");
         $display(" Test-1: Single Write/Read Case        ");
         $display("-------------------------------------- ");
-        env.drv.Burst_write(32'h0004_0000,8'h4);
+        env.drv.single_write();
         #1000;
-        env.mon.Burst_read();
+        env.mon.read();
         $display("###############################");
         if(env.sb.error_count == 0 && env.sb.loop_count != 0)
             $display("STATUS: Test-1: Single Write/Read PASSED");
@@ -42,19 +39,18 @@ program test(sdrc_if intf);
     endtask
     
     task test_case_2();
-        // Before start each test reset error_count and loop_count
-        env.sb.error_count = 0;
-        env.sb.loop_count = 0;
+        // Before start each test reset scoreboard
+        env.sb.clear();
         
         $display("-------------------------------------- ");
         $display(" Test-2: Two Write/Read Case           ");
         $display("-------------------------------------- ");
         
-        env.drv.Burst_write(32'h0004_0000,8'h4);
-        env.mon.Burst_read();
+        env.drv.single_write(4);
+        env.mon.read();
         
-        env.drv.Burst_write(32'h0040_0000,8'h5);
-        env.mon.Burst_read();
+        env.drv.single_write(5);
+        env.mon.read();
         
         $display("###############################");
         if(env.sb.error_count == 0 && env.sb.loop_count != 0)
@@ -65,9 +61,8 @@ program test(sdrc_if intf);
     endtask
     
     task test_case_3();
-        // Before start each test reset error_count and loop_count
-        env.sb.error_count = 0;
-        env.sb.loop_count = 0;
+        // Before start each test reset scoreboard
+        env.sb.clear();
         
         $display("-------------------------------------- ");
         $display(" Test-3: Create a Page Cross Over      ");
@@ -97,30 +92,30 @@ program test(sdrc_if intf);
         env.drv.Burst_write(32'h0015_0FA4,8'hF);  
         env.drv.Burst_write(32'h0016_0FA8,8'hF);  
         env.drv.Burst_write(32'h0017_0FAC,8'hF);  
-        env.mon.Burst_read();  
-        env.mon.Burst_read();  
-        env.mon.Burst_read();  
-        env.mon.Burst_read();  
-        env.mon.Burst_read();  
-        env.mon.Burst_read();  
-        env.mon.Burst_read();
-        env.mon.Burst_read();
-        env.mon.Burst_read();  
-        env.mon.Burst_read();  
-        env.mon.Burst_read();  
-        env.mon.Burst_read();  
-        env.mon.Burst_read();  
-        env.mon.Burst_read();  
-        env.mon.Burst_read();  
-        env.mon.Burst_read();  
-        env.mon.Burst_read();  
-        env.mon.Burst_read();  
-        env.mon.Burst_read();  
-        env.mon.Burst_read();  
-        env.mon.Burst_read();  
-        env.mon.Burst_read();  
-        env.mon.Burst_read();  
-        env.mon.Burst_read();
+        env.mon.read();  
+        env.mon.read();  
+        env.mon.read();  
+        env.mon.read();  
+        env.mon.read();  
+        env.mon.read();  
+        env.mon.read();
+        env.mon.read();
+        env.mon.read();  
+        env.mon.read();  
+        env.mon.read();  
+        env.mon.read();  
+        env.mon.read();  
+        env.mon.read();  
+        env.mon.read();  
+        env.mon.read();  
+        env.mon.read();  
+        env.mon.read();  
+        env.mon.read();  
+        env.mon.read();  
+        env.mon.read();  
+        env.mon.read();  
+        env.mon.read();  
+        env.mon.read();
         
         $display("###############################");
         if(env.sb.error_count == 0 && env.sb.loop_count != 0)
@@ -131,23 +126,22 @@ program test(sdrc_if intf);
     endtask
 
     task test_case_4();
-        // Before start each test reset error_count and loop_count
-        env.sb.error_count = 0;
-        env.sb.loop_count = 0;
+        // Before start each test reset scoreboard
+        env.sb.clear();
         
         $display("-------------------------------------- ");
         $display(" Test-4: Four Write/Read Case           ");
         $display("-------------------------------------- ");
         
-        env.drv.Burst_write(32'h4_0000,8'h4);
-        env.drv.Burst_write(32'h5_0000,8'h5);
-        env.drv.Burst_write(32'h6_0000,8'h6);
-        env.drv.Burst_write(32'h7_0000,8'h7);
+        env.drv.single_write(4);
+        env.drv.single_write(5);
+        env.drv.single_write(6);
+        env.drv.single_write(7);
         
-        env.mon.Burst_read(); 
-        env.mon.Burst_read(); 
-        env.mon.Burst_read();
-        env.mon.Burst_read();  
+        env.mon.read(); 
+        env.mon.read(); 
+        env.mon.read();
+        env.mon.read();  
         
         $display("###############################");
         if(env.sb.error_count == 0 && env.sb.loop_count != 0)
@@ -158,9 +152,8 @@ program test(sdrc_if intf);
     endtask
 
     task test_case_5();
-        // Before start each test reset error_count and loop_count
-        env.sb.error_count = 0;
-        env.sb.loop_count = 0;
+        // Before start each test reset scoreboard
+        env.sb.clear();
         
         $display("--------------------------------------------------- ");
         $display(" Test-5: 24 write/read different bank and row       ");
@@ -175,14 +168,14 @@ program test(sdrc_if intf);
         env.drv.Burst_write({12'h001,2'b10,8'h00,2'b00},8'h6);   // Row: 1 Bank : 2
         env.drv.Burst_write({12'h001,2'b11,8'h00,2'b00},8'h7);   // Row: 1 Bank : 3
         
-        env.mon.Burst_read();  
-        env.mon.Burst_read(); 
-        env.mon.Burst_read();
-        env.mon.Burst_read();  
-        env.mon.Burst_read();
-        env.mon.Burst_read();
-        env.mon.Burst_read();  
-        env.mon.Burst_read();
+        env.mon.read();  
+        env.mon.read(); 
+        env.mon.read();
+        env.mon.read();  
+        env.mon.read();
+        env.mon.read();
+        env.mon.read();  
+        env.mon.read();
         
         env.drv.Burst_write({12'h002,2'b00,8'h00,2'b00},8'h4);   // Row: 2 Bank : 0
         env.drv.Burst_write({12'h002,2'b01,8'h00,2'b00},8'h5);   // Row: 2 Bank : 1
@@ -193,14 +186,14 @@ program test(sdrc_if intf);
         env.drv.Burst_write({12'h003,2'b10,8'h00,2'b00},8'h6);   // Row: 3 Bank : 2
         env.drv.Burst_write({12'h003,2'b11,8'h00,2'b00},8'h7);   // Row: 3 Bank : 3
         
-        env.mon.Burst_read();  
-        env.mon.Burst_read();  
-        env.mon.Burst_read();  
-        env.mon.Burst_read(); 
-        env.mon.Burst_read();  
-        env.mon.Burst_read();
-        env.mon.Burst_read();  
-        env.mon.Burst_read(); 
+        env.mon.read();  
+        env.mon.read();  
+        env.mon.read();  
+        env.mon.read(); 
+        env.mon.read();  
+        env.mon.read();
+        env.mon.read();  
+        env.mon.read(); 
         
         env.drv.Burst_write({12'h002,2'b00,8'h00,2'b00},8'h4);   // Row: 2 Bank : 0
         env.drv.Burst_write({12'h002,2'b01,8'h01,2'b00},8'h5);   // Row: 2 Bank : 1
@@ -211,14 +204,14 @@ program test(sdrc_if intf);
         env.drv.Burst_write({12'h003,2'b10,8'h06,2'b00},8'h6);   // Row: 3 Bank : 2
         env.drv.Burst_write({12'h003,2'b11,8'h07,2'b00},8'h7);   // Row: 3 Bank : 3
         
-        env.mon.Burst_read();  
-        env.mon.Burst_read(); 
-        env.mon.Burst_read();
-        env.mon.Burst_read();  
-        env.mon.Burst_read();  
-        env.mon.Burst_read();  
-        env.mon.Burst_read(); 
-        env.mon.Burst_read();  
+        env.mon.read();  
+        env.mon.read(); 
+        env.mon.read();
+        env.mon.read();  
+        env.mon.read();  
+        env.mon.read();  
+        env.mon.read(); 
+        env.mon.read();  
         
         $display("###############################");
         if(env.sb.error_count == 0 && env.sb.loop_count != 0)
@@ -229,25 +222,21 @@ program test(sdrc_if intf);
     endtask
     
     task test_case_6();
-        // Before start each test reset error_count and loop_count
-        env.sb.error_count = 0;
-        env.sb.loop_count = 0;
+        // Before start each test reset scoreboard
+        env.sb.clear();
         
         $display("-------------------------------------- ");
         $display(" Test-6: Random 2 write/read           ");
         $display("-------------------------------------- ");   
 
-        for(int k=0, int unsigned start_addr = 0; k < 20; k++) begin
-            start_addr = $random & 32'h003FFFFF;
-            env.drv.Burst_write(start_addr,($random & 8'h0f)+1);  
+        for(int k=0; k < 20; k++) begin
+            env.drv.all_rand_write();
             #100;
-            
-            start_addr = $random & 32'h003FFFFF;
-            env.drv.Burst_write(start_addr,($random & 8'h0f)+1);  
+            env.drv.all_rand_write();
             #100;
-            env.mon.Burst_read();   
+            env.mon.read();
             #100;
-            env.mon.Burst_read();
+            env.mon.read();
             #100;
         end
         
