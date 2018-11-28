@@ -1,6 +1,8 @@
 `timescale 1ns/1ps
 
 `include "sdrc_intf.sv"
+`include "whitebox_intf.sv"
+`include "assertions.v"
 `include "test.sv"
 
 module tb_top();
@@ -124,6 +126,30 @@ wire #(2.0) sdram_clk_d   = sdram_clk;
         .Dqm                (SdrcIntf.sdr_dqm       )
      );
 `endif
+
+whitebox_intf wbox_intf
+(
+		// SDRAM signals
+		.sdram_clk			(sdrc_top.sdram_clk		),  
+		.sdram_ras_n		(sdrc_top.sdr_ras_n		), 
+		.sdram_cas_n		(sdrc_top.sdr_cas_n		), 
+		.sdram_we_n			(sdrc_top.sdr_we_n		),
+		
+		// WISHBONE signals
+		.wb_clk_i			(sdrc_top.wb_clk_i		),
+		.wb_rst_i			(sdrc_top.wb_rst_i		),
+		.wb_stb_i			(sdrc_top.wb_stb_i		),
+		.wb_ack_o			(sdrc_top.wb_ack_o		),
+		.wb_addr_i			(sdrc_top.wb_addr_i		),
+		.wb_we_i			(sdrc_top.wb_we_i		),
+		.wb_dat_i			(sdrc_top.wb_dat_i		),
+		.wb_sel_i			(sdrc_top.wb_sel_i		),
+		.wb_dat_o			(sdrc_top.wb_dat_o		),
+		.wb_cyc_i			(sdrc_top.wb_cyc_i		),
+		.wb_cti_i			(sdrc_top.wb_cti_i		)
+);
+
+assertions assert_module(wbox_intf);
 
 initial begin
 	$display("-------------------------------------- ");
