@@ -1,14 +1,13 @@
 `ifndef WHITEBOX_INTF_SV
 `define WHITEBOX_INTF_SV
 
-interface whitebox_intf (	sdram_clk, sdram_ras_n, sdram_cas_n, sdram_we_n,
+interface whitebox_intf (	sdram_clk, sdram_en, sdram_ras_n, sdram_cas_n, sdram_we_n,
 							wb_clk_i, wb_rst_i, wb_stb_i, wb_ack_o, wb_addr_i, wb_we_i,
 							wb_dat_i, wb_sel_i, wb_dat_o, wb_cyc_i, wb_cti_i);
 	
-	// Clocks
+	//SDRAM Signals
 	input sdram_clk;
-	
-	// Bus Commands
+	input sdram_en;
 	input sdram_ras_n;
     input sdram_cas_n;
     input sdram_we_n;

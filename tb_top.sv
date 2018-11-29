@@ -130,7 +130,8 @@ wire #(2.0) sdram_clk_d   = sdram_clk;
 whitebox_intf wbox_intf
 (
 		// SDRAM signals
-		.sdram_clk			(sdrc_top.sdram_clk		),  
+		.sdram_clk			(sdrc_top.sdram_clk		),
+		.sdram_en			(sdrc_top.cfg_sdr_en	),
 		.sdram_ras_n		(sdrc_top.sdr_ras_n		), 
 		.sdram_cas_n		(sdrc_top.sdr_cas_n		), 
 		.sdram_we_n			(sdrc_top.sdr_we_n		),
