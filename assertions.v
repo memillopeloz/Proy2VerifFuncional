@@ -30,8 +30,8 @@ sequence autorefresh_cmd;
 endsequence
 
 property prop_sdram_correct_init;
-	@(posedge wbox_intf.sdram_clk) $rose(wbox_intf.sdram_en) 	|=> (inhibit_command xor nop_command) [*10000]
-																|=> nop_command[*0:$] |=> precharge_cmd |=> nop_command[*0:$] |=> autorefresh_cmd |=> nop_command[*0:$] |=> autorefresh_cmd;
+	@(posedge wbox_intf.sdram_clk) $rose(wbox_intf.sdram_en) 	|=> (inhibit_cmd or nop_cmd) [*10000]
+																|=> nop_cmd[*0:$] |=> precharge_cmd |=> nop_cmd[*0:$] |=> autorefresh_cmd |=> nop_cmd[*0:$] |=> autorefresh_cmd;
 endproperty;
 
 property prop_wb_sigs_init_during_rst;
