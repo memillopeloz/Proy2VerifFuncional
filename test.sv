@@ -8,19 +8,39 @@ program test(sdrc_if intf);
     
     
     initial begin
+        int unsigned success = 1;
+        int unsigned retVal = 1;
         env.drv.reset();
 
-        test_case_1();
-        test_case_2();
-        //test_case_3();
-        test_case_4();
-        //test_case_5();
-        test_case_6();
+        test_case_1(retVal);//PASS
+        success &= retVal;
+
+        test_case_2(retVal);//PASS
+        success &= retVal;
+    
+        //test_case_3(retVal);
+        success &= retVal;
+
+        test_case_4(retVal);//PASS
+        success &= retVal;
+
+        test_case_5(retVal);
+        success &= retVal;
+
+        test_case_6(retVal);
+        success &= retVal;
 
         //env.drv.testRandomize();
+        
+        $display("###############################");
+        if(success)
+            $display("STATUS: All tests have PASSED");
+        else
+            $display("ERROR:  One or more tests FAILED");
+        $display("###############################");
     end
     
-    task test_case_1();
+    task test_case_1(output int ret);
         // Before start each test reset scoreboard
         env.sb.clear();
         
@@ -31,14 +51,18 @@ program test(sdrc_if intf);
         #1000;
         env.mon.read();
         $display("###############################");
-        if(env.sb.error_count == 0 && env.sb.loop_count != 0)
+        if(env.sb.error_count == 0 && env.sb.loop_count != 0) begin
             $display("STATUS: Test-1: Single Write/Read PASSED");
-        else
+            ret = 1;
+        end
+        else begin
             $display("ERROR:  Test-1: Single Write/Read FAILED");
+            ret = 0;
+        end
         $display("###############################");
     endtask
     
-    task test_case_2();
+    task test_case_2(output int ret);
         // Before start each test reset scoreboard
         env.sb.clear();
         
@@ -53,14 +77,18 @@ program test(sdrc_if intf);
         env.mon.read();
         
         $display("###############################");
-        if(env.sb.error_count == 0 && env.sb.loop_count != 0)
+        if(env.sb.error_count == 0 && env.sb.loop_count != 0) begin
             $display("STATUS: Test-2: Two Write/Read PASSED");
-        else
+            ret = 1;
+        end
+        else begin
             $display("ERROR:  Test-2: Two Write/Read FAILED");
+            ret = 0;
+        end
         $display("###############################");
     endtask
     
-    task test_case_3();
+    task test_case_3(output int ret);
         // Before start each test reset scoreboard
         env.sb.clear();
         
@@ -118,14 +146,18 @@ program test(sdrc_if intf);
         env.mon.read();
         
         $display("###############################");
-        if(env.sb.error_count == 0 && env.sb.loop_count != 0)
+        if(env.sb.error_count == 0 && env.sb.loop_count != 0) begin
             $display("STATUS: Test-3: Create a Page Cross Over PASSED");
-        else
+            ret = 1;
+        end
+        else begin
             $display("ERROR:  Test-3: Create a Page Cross Over FAILED");
+            ret = 0;
+        end
         $display("###############################");
     endtask
 
-    task test_case_4();
+    task test_case_4(output int ret);
         // Before start each test reset scoreboard
         env.sb.clear();
         
@@ -144,14 +176,18 @@ program test(sdrc_if intf);
         env.mon.read();  
         
         $display("###############################");
-        if(env.sb.error_count == 0 && env.sb.loop_count != 0)
+        if(env.sb.error_count == 0 && env.sb.loop_count != 0) begin
             $display("STATUS: Test-4: Four Write/Read PASSED");
-        else
+            ret = 1;
+        end
+        else begin
             $display("ERROR:  Test-4: Four Write/Read FAILED");
+            ret = 0;
+        end
         $display("###############################");
     endtask
 
-    task test_case_5();
+    task test_case_5(output int ret);
         // Before start each test reset scoreboard
         env.sb.clear();
         
@@ -159,14 +195,14 @@ program test(sdrc_if intf);
         $display(" Test-5: 24 write/read different bank and row       ");
         $display("--------------------------------------------------- ");
         
-        env.drv.Burst_write({12'h000,2'b00,8'h00,2'b00},8'h4);   // Row: 0 Bank : 0
-        env.drv.Burst_write({12'h000,2'b01,8'h00,2'b00},8'h5);   // Row: 0 Bank : 1
-        env.drv.Burst_write({12'h000,2'b10,8'h00,2'b00},8'h6);   // Row: 0 Bank : 2
-        env.drv.Burst_write({12'h000,2'b11,8'h00,2'b00},8'h7);   // Row: 0 Bank : 3
-        env.drv.Burst_write({12'h001,2'b00,8'h00,2'b00},8'h4);   // Row: 1 Bank : 0
-        env.drv.Burst_write({12'h001,2'b01,8'h00,2'b00},8'h5);   // Row: 1 Bank : 1
-        env.drv.Burst_write({12'h001,2'b10,8'h00,2'b00},8'h6);   // Row: 1 Bank : 2
-        env.drv.Burst_write({12'h001,2'b11,8'h00,2'b00},8'h7);   // Row: 1 Bank : 3
+        env.drv.rowbank_write(0, 0);   // Row: 0 Bank : 0
+        env.drv.rowbank_write(0, 1);   // Row: 0 Bank : 1
+        env.drv.rowbank_write(0, 2);   // Row: 0 Bank : 2
+        env.drv.rowbank_write(0, 3);   // Row: 0 Bank : 3
+        env.drv.rowbank_write(1, 0);   // Row: 1 Bank : 0
+        env.drv.rowbank_write(1, 1);   // Row: 1 Bank : 1
+        env.drv.rowbank_write(1, 2);   // Row: 1 Bank : 2
+        env.drv.rowbank_write(1, 3);   // Row: 1 Bank : 3
         
         env.mon.read();  
         env.mon.read(); 
@@ -177,14 +213,14 @@ program test(sdrc_if intf);
         env.mon.read();  
         env.mon.read();
         
-        env.drv.Burst_write({12'h002,2'b00,8'h00,2'b00},8'h4);   // Row: 2 Bank : 0
-        env.drv.Burst_write({12'h002,2'b01,8'h00,2'b00},8'h5);   // Row: 2 Bank : 1
-        env.drv.Burst_write({12'h002,2'b10,8'h00,2'b00},8'h6);   // Row: 2 Bank : 2
-        env.drv.Burst_write({12'h002,2'b11,8'h00,2'b00},8'h7);   // Row: 2 Bank : 3
-        env.drv.Burst_write({12'h003,2'b00,8'h00,2'b00},8'h4);   // Row: 3 Bank : 0
-        env.drv.Burst_write({12'h003,2'b01,8'h00,2'b00},8'h5);   // Row: 3 Bank : 1
-        env.drv.Burst_write({12'h003,2'b10,8'h00,2'b00},8'h6);   // Row: 3 Bank : 2
-        env.drv.Burst_write({12'h003,2'b11,8'h00,2'b00},8'h7);   // Row: 3 Bank : 3
+        env.drv.rowbank_write(2, 0);   // Row: 2 Bank : 0
+        env.drv.rowbank_write(2, 1);   // Row: 2 Bank : 1
+        env.drv.rowbank_write(2, 2);   // Row: 2 Bank : 2
+        env.drv.rowbank_write(2, 3);   // Row: 2 Bank : 3
+        env.drv.rowbank_write(3, 0);   // Row: 3 Bank : 0
+        env.drv.rowbank_write(3, 1);   // Row: 3 Bank : 1
+        env.drv.rowbank_write(3, 2);   // Row: 3 Bank : 2
+        env.drv.rowbank_write(3, 3);   // Row: 3 Bank : 3
         
         env.mon.read();  
         env.mon.read();  
@@ -195,14 +231,14 @@ program test(sdrc_if intf);
         env.mon.read();  
         env.mon.read(); 
         
-        env.drv.Burst_write({12'h002,2'b00,8'h00,2'b00},8'h4);   // Row: 2 Bank : 0
-        env.drv.Burst_write({12'h002,2'b01,8'h01,2'b00},8'h5);   // Row: 2 Bank : 1
-        env.drv.Burst_write({12'h002,2'b10,8'h02,2'b00},8'h6);   // Row: 2 Bank : 2
-        env.drv.Burst_write({12'h002,2'b11,8'h03,2'b00},8'h7);   // Row: 2 Bank : 3
-        env.drv.Burst_write({12'h003,2'b00,8'h04,2'b00},8'h4);   // Row: 3 Bank : 0
-        env.drv.Burst_write({12'h003,2'b01,8'h05,2'b00},8'h5);   // Row: 3 Bank : 1
-        env.drv.Burst_write({12'h003,2'b10,8'h06,2'b00},8'h6);   // Row: 3 Bank : 2
-        env.drv.Burst_write({12'h003,2'b11,8'h07,2'b00},8'h7);   // Row: 3 Bank : 3
+        env.drv.rowbank_write(4, 0);   // Row: 4 Bank : 0
+        env.drv.rowbank_write(4, 1);   // Row: 4 Bank : 1
+        env.drv.rowbank_write(4, 2);   // Row: 4 Bank : 2
+        env.drv.rowbank_write(4, 3);   // Row: 4 Bank : 3
+        env.drv.rowbank_write(5, 0);   // Row: 5 Bank : 0
+        env.drv.rowbank_write(5, 1);   // Row: 5 Bank : 1
+        env.drv.rowbank_write(5, 2);   // Row: 5 Bank : 2
+        env.drv.rowbank_write(5, 3);   // Row: 5 Bank : 3
         
         env.mon.read();  
         env.mon.read(); 
@@ -214,14 +250,18 @@ program test(sdrc_if intf);
         env.mon.read();  
         
         $display("###############################");
-        if(env.sb.error_count == 0 && env.sb.loop_count != 0)
+        if(env.sb.error_count == 0 && env.sb.loop_count != 0) begin
             $display("STATUS: Test-5: 24 write/read different bank and row PASSED");
-        else
+            ret = 1;
+        end
+        else begin
             $display("ERROR:  Test-5: 24 write/read different bank and row FAILED");
+            ret = 0;
+        end
         $display("###############################");
     endtask
     
-    task test_case_6();
+    task test_case_6(output int ret);
         // Before start each test reset scoreboard
         env.sb.clear();
         
@@ -241,10 +281,14 @@ program test(sdrc_if intf);
         end
         
         $display("###############################");
-        if(env.sb.error_count == 0 && env.sb.loop_count != 0)
+        if(env.sb.error_count == 0 && env.sb.loop_count != 0) begin
             $display("STATUS: Test-6: Random 2 write/read PASSED");
-        else
+            ret = 1;
+        end
+        else begin
             $display("ERROR:  Test-6: Random 2 write/read FAILED");
+            ret = 0;
+        end
         $display("###############################");
     endtask
     

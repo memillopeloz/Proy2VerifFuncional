@@ -5,17 +5,20 @@
 `include "scoreboard.sv"
 `include "stimulusAllRand.sv"
 `include "stimulusRandAddr.sv"
+`include "stimulusRowBank.sv"
 
 class driver;
     scoreboard sb;
     stimulusAllRand stiAllRand;
     stimulusRandAddr stiRandAddr;
+    stimulusRowBank stiRowBank;
     virtual sdrc_if intf;
     
     function new(virtual sdrc_if intf,scoreboard sb);
         this.intf = intf;
         this.stiAllRand = new();
         this.stiRandAddr = new();
+        this.stiRowBank = new();
         this.sb = sb;
     endfunction
     
@@ -112,6 +115,26 @@ class driver;
 
         bl = sti.getBurstLength();
 
+        sb.bfifo.push_back(bl);
+        
+        @ (negedge intf.sys_clk);
+        $display("Base Write Address: %x, Burst Size: %d", sti.getAddress(), bl);
+        
+        write_routine(bl, sti);
+    endtask
+
+    task rowbank_write(input int unsigned rw, input int unsigned bnk);
+        int unsigned bl;
+        stimulus sti = stiRowBank;
+        
+        sti.setRow(rw);
+        sti.setBank(bnk);
+
+        if(sti.randomize() != 1) begin
+            $display("failed randomize()");
+        end
+
+        bl = sti.getBurstLength();
         sb.bfifo.push_back(bl);
         
         @ (negedge intf.sys_clk);

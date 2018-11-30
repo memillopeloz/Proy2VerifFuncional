@@ -39,6 +39,13 @@ class stimulusAllRand extends stimulusRandAddr;
         return this.burst_length;
     endfunction
 
+    function integer setRow(val);
+    endfunction
+    function integer setCol(val);
+    endfunction
+    function integer setBank(val);
+    endfunction
+
     //returns first address, without modifying queues
     function integer getAddress();
         return {this.row[0], this.bank[0], this.col[0]};

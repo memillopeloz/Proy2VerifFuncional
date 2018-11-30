@@ -1,54 +1,63 @@
-`ifndef STIMULUS_RANDADDR_SV
-`define STIMULUS_RANDADDR_SV
+`ifndef STIMULUS_ROWBANK_SV
+`define STIMULUS_ROWBANK_SV
 
 `include "stimulus.sv"
 
-class stimulusRandAddr extends stimulus;
-    rand  bit[11:0] row[$];
-    rand  bit[1:0]  bank[$];
+class stimulusRowBank extends stimulus;
+    bit[11:0] row;
+    bit[1:0]  bank;
     rand  bit[11:0] col[$];
 
+    randc int burst_length; //cyclic
+
+    constraint burst {
+        this.burst_length inside {[4:7]};
+    }
+
     constraint arrayBounds {
-        bank.size == this.burst_length;
-        row.size == this.burst_length;
         col.size == this.burst_length;
     }
 
     constraint memoryRange {
-        foreach(bank[i]) { bank[i] inside {[0:4]} };
-        foreach(row[i]) { row[i] inside {[0:11]} };
         foreach(col[i]) { col[i] inside {[0:7]} };
-    };
+    }
+
+    function new();
+        this.row = 0;
+        this.bank = 0;
+    endfunction
     
     function integer getRow(idx);
-        return this.row[idx];
+        return this.row;
     endfunction
     function integer getCol(idx);
         return this.col[idx];
     endfunction
     function integer getBank(idx);
-        return this.bank[idx];
+        return this.bank;
     endfunction
     function integer getBurstLength();
         return this.burst_length;
     endfunction
 
-    function integer setRow(val);
-    endfunction
-    function integer setCol(val);
+	function integer setRow(val);
+        this.row = val;
     endfunction
     function integer setBank(val);
+        this.bank = val;
+	endfunction
+    function integer setCol(val);
     endfunction
 
     //returns first address, without modifying queues
     function integer getAddress();
-        return {this.row[0], this.bank[0], this.col[0]};
-        //return (this.row[0] << 14) | (this.bank[0] << 12) | (this.col[0]); this is the same as above
+        return {this.row, this.bank, this.col[0]};
+        //return (this.row << 14) | (this.bank << 12) | (this.col[0]); this is the same as above
     endfunction
 
     //pops next address from queues
     function integer popAddress();
-        return {this.row.pop_front(), this.bank.pop_front(), this.col.pop_front()};
+        return {this.row, this.bank, this.col.pop_front()};
     endfunction
 
     // memory layout

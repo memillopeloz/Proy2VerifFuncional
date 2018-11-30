@@ -10,11 +10,15 @@ virtual class stimulus;
     //pops next address from queues
     pure virtual function integer popAddress();
 
-    //getters, necessary because direct access goes for members in base class
+    //getters/setters, necessary because direct access goes for members in base class
     pure virtual function integer getRow(idx);
     pure virtual function integer getCol(idx);
     pure virtual function integer getBank(idx);
     pure virtual function integer getBurstLength();
+
+    pure virtual function integer setRow(val);
+    pure virtual function integer setCol(val);
+    pure virtual function integer setBank(val);
 
     // memory layout
     // sdram controller supports the following amount of rows, banks, and columns:
