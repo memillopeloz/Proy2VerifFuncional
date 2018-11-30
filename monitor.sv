@@ -57,6 +57,13 @@ class monitor;
 		
 	endtask
 
+    task readN(input int N);
+        for(int i = 0; i < N; i++)
+        begin
+            read();
+        end
+    endtask
+
 endclass
 
 `endif

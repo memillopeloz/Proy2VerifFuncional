@@ -18,19 +18,20 @@ program test(sdrc_if intf);
         test_case_2(retVal);//PASS
         success &= retVal;
     
-        //test_case_3(retVal);
+        test_case_3(retVal);
         success &= retVal;
 
         test_case_4(retVal);//PASS
         success &= retVal;
 
-        test_case_5(retVal);
+        test_case_5(retVal);//PASS
         success &= retVal;
 
-        test_case_6(retVal);
+        test_case_6(retVal);//PASS
         success &= retVal;
 
         //env.drv.testRandomize();
+        //env.drv.testGen();
         
         $display("###############################");
         if(success)
@@ -89,61 +90,64 @@ program test(sdrc_if intf);
     endtask
     
     task test_case_3(output int ret);
+        int writeCount;
         // Before start each test reset scoreboard
         env.sb.clear();
         
         $display("-------------------------------------- ");
         $display(" Test-3: Create a Page Cross Over      ");
         $display("-------------------------------------- ");
-            
-        env.drv.Burst_write(32'h0000_0FF0,8'h8);
-        env.drv.Burst_write(32'h0001_0FF4,8'hF);  
-        env.drv.Burst_write(32'h0002_0FF8,8'hF);  
-        env.drv.Burst_write(32'h0003_0FFC,8'hF);  
-        env.drv.Burst_write(32'h0004_0FE0,8'hF);  
-        env.drv.Burst_write(32'h0005_0FE4,8'hF);  
-        env.drv.Burst_write(32'h0006_0FE8,8'hF);  
-        env.drv.Burst_write(32'h0007_0FEC,8'hF);  
-        env.drv.Burst_write(32'h0008_0FD0,8'hF);  
-        env.drv.Burst_write(32'h0009_0FD4,8'hF);  
-        env.drv.Burst_write(32'h000A_0FD8,8'hF);  
-        env.drv.Burst_write(32'h000B_0FDC,8'hF);  
-        env.drv.Burst_write(32'h000C_0FC0,8'hF);  
-        env.drv.Burst_write(32'h000D_0FC4,8'hF);  
-        env.drv.Burst_write(32'h000E_0FC8,8'hF);  
-        env.drv.Burst_write(32'h000F_0FCC,8'hF);  
-        env.drv.Burst_write(32'h0010_0FB0,8'hF);  
-        env.drv.Burst_write(32'h0011_0FB4,8'hF);  
-        env.drv.Burst_write(32'h0012_0FB8,8'hF);  
-        env.drv.Burst_write(32'h0013_0FBC,8'hF);  
-        env.drv.Burst_write(32'h0014_0FA0,8'hF);  
-        env.drv.Burst_write(32'h0015_0FA4,8'hF);  
-        env.drv.Burst_write(32'h0016_0FA8,8'hF);  
-        env.drv.Burst_write(32'h0017_0FAC,8'hF);  
-        env.mon.read();  
-        env.mon.read();  
-        env.mon.read();  
-        env.mon.read();  
-        env.mon.read();  
-        env.mon.read();  
-        env.mon.read();
-        env.mon.read();
-        env.mon.read();  
-        env.mon.read();  
-        env.mon.read();  
-        env.mon.read();  
-        env.mon.read();  
-        env.mon.read();  
-        env.mon.read();  
-        env.mon.read();  
-        env.mon.read();  
-        env.mon.read();  
-        env.mon.read();  
-        env.mon.read();  
-        env.mon.read();  
-        env.mon.read();  
-        env.mon.read();  
-        env.mon.read();
+        
+        env.drv.crossover_write(writeCount);
+        env.mon.readN(writeCount);
+        //env.drv.Burst_write(32'h0000_0FF0,8'h8);
+        //env.drv.Burst_write(32'h0001_0FF4,8'hF);
+        //env.drv.Burst_write(32'h0002_0FF8,8'hF);
+        //env.drv.Burst_write(32'h0003_0FFC,8'hF);
+        //env.drv.Burst_write(32'h0004_0FE0,8'hF);
+        //env.drv.Burst_write(32'h0005_0FE4,8'hF);
+        //env.drv.Burst_write(32'h0006_0FE8,8'hF);
+        //env.drv.Burst_write(32'h0007_0FEC,8'hF);
+        //env.drv.Burst_write(32'h0008_0FD0,8'hF);
+        //env.drv.Burst_write(32'h0009_0FD4,8'hF);
+        //env.drv.Burst_write(32'h000A_0FD8,8'hF);
+        //env.drv.Burst_write(32'h000B_0FDC,8'hF);
+        //env.drv.Burst_write(32'h000C_0FC0,8'hF);
+        //env.drv.Burst_write(32'h000D_0FC4,8'hF);
+        //env.drv.Burst_write(32'h000E_0FC8,8'hF);
+        //env.drv.Burst_write(32'h000F_0FCC,8'hF);
+        //env.drv.Burst_write(32'h0010_0FB0,8'hF);
+        //env.drv.Burst_write(32'h0011_0FB4,8'hF);
+        //env.drv.Burst_write(32'h0012_0FB8,8'hF);
+        //env.drv.Burst_write(32'h0013_0FBC,8'hF);
+        //env.drv.Burst_write(32'h0014_0FA0,8'hF);
+        //env.drv.Burst_write(32'h0015_0FA4,8'hF);
+        //env.drv.Burst_write(32'h0016_0FA8,8'hF);
+        //env.drv.Burst_write(32'h0017_0FAC,8'hF);
+        //env.mon.read();  
+        //env.mon.read();  
+        //env.mon.read();  
+        //env.mon.read();  
+        //env.mon.read();  
+        //env.mon.read();  
+        //env.mon.read();
+        //env.mon.read();
+        //env.mon.read();  
+        //env.mon.read();  
+        //env.mon.read();  
+        //env.mon.read();  
+        //env.mon.read();  
+        //env.mon.read();  
+        //env.mon.read();  
+        //env.mon.read();  
+        //env.mon.read();  
+        //env.mon.read();  
+        //env.mon.read();  
+        //env.mon.read();  
+        //env.mon.read();  
+        //env.mon.read();  
+        //env.mon.read();  
+        //env.mon.read();
         
         $display("###############################");
         if(env.sb.error_count == 0 && env.sb.loop_count != 0) begin

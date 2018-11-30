@@ -6,12 +6,14 @@
 `include "stimulusAllRand.sv"
 `include "stimulusRandAddr.sv"
 `include "stimulusRowBank.sv"
+`include "stimulusCrossOver.sv"
 
 class driver;
     scoreboard sb;
-    stimulusAllRand stiAllRand;
-    stimulusRandAddr stiRandAddr;
-    stimulusRowBank stiRowBank;
+    stimulusAllRand     stiAllRand;
+    stimulusRandAddr    stiRandAddr;
+    stimulusRowBank     stiRowBank;
+    stimulusCrossOver   stiCrossOver;
     virtual sdrc_if intf;
     
     function new(virtual sdrc_if intf,scoreboard sb);
@@ -19,6 +21,7 @@ class driver;
         this.stiAllRand = new();
         this.stiRandAddr = new();
         this.stiRowBank = new();
+        this.stiCrossOver = new();
         this.sb = sb;
     endfunction
     
@@ -71,6 +74,25 @@ class driver;
         intf.wb_dat_i        = 'hx;
     endtask
 
+    task testGen();
+        int baseRow = 0;
+        int baseCol = 8'hFF;
+        int addr;
+
+        int j;       //32'h0017_0FAC
+        for(int i = 0, j = 0; i < 24; i++, j+=4)
+        begin
+            addr = ((baseRow & 8'hFF) << 16) | ((baseCol & 8'hFF) << 4) | (j & 4'hF);
+            $display("Addr: %H", addr);
+            
+            baseRow += 1;
+            if(j > 11) begin
+                j = -4;
+                baseCol -= 1;
+            end
+        end
+    endtask
+
     task testRandomize();
         stimulus sti = stiAllRand;
         for(int i = 0; i < 20; i++)
@@ -121,6 +143,21 @@ class driver;
         $display("Base Write Address: %x, Burst Size: %d", sti.getAddress(), bl);
         
         write_routine(bl, sti);
+    endtask
+
+    task crossover_write(output int writeCount);
+        stimulus sti = stiCrossOver;
+        int unsigned bl = sti.getBurstLength();
+       
+        @ (negedge intf.sys_clk);
+        $display("Base Write Address: %x, Write Count: %d, Burst Size: 15", sti.getAddress(), bl);
+        
+        for(int i = 0; i < bl; i++)
+        begin
+            write_routine(4'hF, sti);
+            sb.bfifo.push_back(4'hF);
+        end
+        writeCount = bl;
     endtask
 
     task rowbank_write(input int unsigned rw, input int unsigned bnk);
